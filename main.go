@@ -61,6 +61,8 @@ type Object struct {
 	IsDir bool   `json:"is_dir"`
 }
 
+var httpTemplate = string(httpTemplateArr)
+
 func SendObjects(ctx *fasthttp.RequestCtx, objects []Object, hasParent bool) {
 	b, err := json.Marshal(Data{HasParent: hasParent, Objects: objects})
 	if err != nil {
@@ -123,16 +125,6 @@ func GetContent(ctx *fasthttp.RequestCtx) {
 		return
 	}
 	SendFiles(ctx, files)
-}
-
-var httpTemplate string
-
-func init() {
-	b, err := ioutil.ReadFile("./client/index.html")
-	if err != nil {
-		panic(err)
-	}
-	httpTemplate = string(b)
 }
 
 func GetLocalIP() string {
