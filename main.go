@@ -11,6 +11,7 @@ import (
 	"unicode/utf16"
 
 	"github.com/fasthttp/router"
+	"github.com/getlantern/systray"
 	"github.com/valyala/fasthttp"
 	"github.com/valyala/fasttemplate"
 	"golang.org/x/sys/windows"
@@ -151,13 +152,34 @@ func GetLocalIP() string {
 	return filtered[len(filtered)-1]
 }
 
-func main() {
+var server fasthttp.Server
+
+func StartHTTPServer() {
 	r := router.New()
 	r.GET("/*path", GetContent)
 
+	server = fasthttp.Server{}
+	server.Handler = r.Handler
+
 	fmt.Println(GetLocalIP() + ":8080")
 
-	s := fasthttp.Server{LogAllErrors: false, Logger: nil}
-	s.Handler = r.Handler
-	panic(s.ListenAndServe(":8080"))
+	err := server.ListenAndServe(":8080")
+	if err != nil {
+		panic(err)
+	}
+}
+
+func main() {
+	go StartHTTPServer()
+	systray.Run(onReady, func() {})
+}
+
+func onReady() {
+	systray.SetIcon(icon)
+	systray.SetTitle("Awesome App")
+	mQuitOrig := systray.AddMenuItem("Quit", "Quit the whole app")
+	go func() {
+		<-mQuitOrig.ClickedCh
+		systray.Quit()
+	}()
 }

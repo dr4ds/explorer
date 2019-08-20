@@ -69,8 +69,6 @@
 
     var data = JSON.parse(atob(objectsElement.dataset.objects));
 
-    console.log(data);
-
     data.objects.forEach(e => {
       appendObject(e.name, e.is_dir, data.has_parent);
     });
