@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Explorer</title>
+    <style>
+      body {
+        margin: 0;
+        overflow-x: hidden;
+      }
+      .object {
+        display: flex;
+        align-items: center;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #000;
+        text-decoration: none;
+        padding: 10px;
+        border-bottom: 1px solid rgb(200, 200, 200);
+        width: 100%;
+      }
+      .object-icon {
+        height: 20px;
+        width: 20px;
+        margin-right: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="objects" data-objects="{ data }">
+      <!-- <a class="object" href="#">
+        <img src="yes" class="icon" />
+        <div class="object-name">Name</div>
+      </a> -->
+    </div>
+  </body>
+  <script>
+    var fileIcon =
+      "data:image/svg+xml;base64, PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkNhcGFfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiCgkgdmlld0JveD0iMCAwIDU4IDU4IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1OCA1ODsiIHhtbDpzcGFjZT0icHJlc2VydmUiPgo8cG9seWdvbiBzdHlsZT0iZmlsbDojRURFQURBOyIgcG9pbnRzPSI1MS41LDE0IDM3LjUsMCA2LjUsMCA2LjUsNTggNTEuNSw1OCAiLz4KPGc+Cgk8cGF0aCBzdHlsZT0iZmlsbDojQ0VDOUFFOyIgZD0iTTE2LjUsMjNoMjVjMC41NTIsMCwxLTAuNDQ3LDEtMXMtMC40NDgtMS0xLTFoLTI1Yy0wLjU1MiwwLTEsMC40NDctMSwxUzE1Ljk0OCwyMywxNi41LDIzeiIvPgoJPHBhdGggc3R5bGU9ImZpbGw6I0NFQzlBRTsiIGQ9Ik0xNi41LDE1aDEwYzAuNTUyLDAsMS0wLjQ0NywxLTFzLTAuNDQ4LTEtMS0xaC0xMGMtMC41NTIsMC0xLDAuNDQ3LTEsMVMxNS45NDgsMTUsMTYuNSwxNXoiLz4KCTxwYXRoIHN0eWxlPSJmaWxsOiNDRUM5QUU7IiBkPSJNNDEuNSwyOWgtMjVjLTAuNTUyLDAtMSwwLjQ0Ny0xLDFzMC40NDgsMSwxLDFoMjVjMC41NTIsMCwxLTAuNDQ3LDEtMVM0Mi4wNTIsMjksNDEuNSwyOXoiLz4KCTxwYXRoIHN0eWxlPSJmaWxsOiNDRUM5QUU7IiBkPSJNNDEuNSwzN2gtMjVjLTAuNTUyLDAtMSwwLjQ0Ny0xLDFzMC40NDgsMSwxLDFoMjVjMC41NTIsMCwxLTAuNDQ3LDEtMVM0Mi4wNTIsMzcsNDEuNSwzN3oiLz4KCTxwYXRoIHN0eWxlPSJmaWxsOiNDRUM5QUU7IiBkPSJNNDEuNSw0NWgtMjVjLTAuNTUyLDAtMSwwLjQ0Ny0xLDFzMC40NDgsMSwxLDFoMjVjMC41NTIsMCwxLTAuNDQ3LDEtMVM0Mi4wNTIsNDUsNDEuNSw0NXoiLz4KPC9nPgo8cG9seWdvbiBzdHlsZT0iZmlsbDojQ0VDOUFFOyIgcG9pbnRzPSIzNy41LDAgMzcuNSwxNCA1MS41LDE0ICIvPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K";
+    var folderIcon =
+      "data:image/svg+xml;base64, PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkNhcGFfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiCgkgdmlld0JveD0iMCAwIDU4IDU4IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1OCA1ODsiIHhtbDpzcGFjZT0icHJlc2VydmUiPgo8cGF0aCBzdHlsZT0iZmlsbDojRUZDRTRBOyIgZD0iTTQ2LjMyNCw1Mi41SDEuNTY1Yy0xLjAzLDAtMS43NzktMC45NzgtMS41MS0xLjk3M2wxMC4xNjYtMjcuODcxCgljMC4xODQtMC42ODIsMC44MDMtMS4xNTYsMS41MS0xLjE1Nkg1Ni40OWMxLjAzLDAsMS41MSwwLjk4NCwxLjUxLDEuOTczTDQ3LjgzNCw1MS4zNDRDNDcuNjUsNTIuMDI2LDQ3LjAzMSw1Mi41LDQ2LjMyNCw1Mi41eiIvPgo8cGF0aCBzdHlsZT0iZmlsbDojRjRFRkRDOyIgZD0iTTEwLjIyMSwyMi42NTZjMC4xODQtMC42ODMsMC44MDMtMS4xNTYsMS41MS0xLjE1Nkg1M3YtN0g5bC02LDZ2MjEuOTUzTDEwLjIyMSwyMi42NTZ6Ii8+CjxwYXRoIHN0eWxlPSJmaWxsOiNFQkJBMTY7IiBkPSJNMjMuNTcxLDEwLjVMMjAsNS41SDEuNzMyQzAuNzc2LDUuNSwwLDYuMjc1LDAsNy4yMzJWNDkuOTZjMC4wNjksMC4wMDIsMC4xMzgsMC4wMDYsMC4yMDUsMC4wMQoJTDMsNDIuMzQ5VjIwLjVsMi0ydi04SDIzLjU3MXoiLz4KPHBvbHlnb24gc3R5bGU9ImZpbGw6I0QxQkY4NjsiIHBvaW50cz0iNSwxMC41IDUsMTguNSA5LDE0LjUgNTEsMTQuNSA1MSwxMC41ICIvPgo8cmVjdCB4PSIyOCIgeT0iMTkuNSIgc3R5bGU9ImZpbGw6I0JGQkFBNTsiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiLz4KPHJlY3QgeD0iMzUiIHk9IjE5LjUiIHN0eWxlPSJmaWxsOiNCRkJBQTU7IiB3aWR0aD0iMiIgaGVpZ2h0PSIyIi8+CjxyZWN0IHg9IjQyIiB5PSIxOS41IiBzdHlsZT0iZmlsbDojQkZCQUE1OyIgd2lkdGg9IjIiIGhlaWdodD0iMiIvPgo8cmVjdCB4PSIxNCIgeT0iMTkuNSIgc3R5bGU9ImZpbGw6I0JGQkFBNTsiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiLz4KPHJlY3QgeD0iMjEiIHk9IjE5LjUiIHN0eWxlPSJmaWxsOiNCRkJBQTU7IiB3aWR0aD0iMiIgaGVpZ2h0PSIyIi8+Cjxwb2x5Z29uIHN0eWxlPSJmaWxsOiNDRUM5QUU7IiBwb2ludHM9IjksMjAuNSA5LDE0LjUgMywyMC41ICIvPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K";
+
+    var objectsElement = document.getElementById("objects");
+    function appendObject(name, isDir, hasParent) {
+      var object = document.createElement("a");
+      object.className = "object";
+      object.href = document.location.pathname + name;
+      if (isDir && hasParent) {
+        object.href += "/";
+      }
+
+      var objectIcon = document.createElement("img");
+      objectIcon.className = "object-icon";
+      if (isDir) {
+        objectIcon.src = folderIcon;
+      } else {
+        objectIcon.src = fileIcon;
+      }
+
+      var objectName = document.createElement("div");
+      objectName.className = "object-name";
+      objectName.innerText = name;
+
+      object.append(objectIcon);
+      object.appendChild(objectName);
+      objectsElement.appendChild(object);
+    }
+
+    var data = JSON.parse(atob(objectsElement.dataset.objects));
+
+    console.log(data);
+
+    data.objects.forEach(e => {
+      appendObject(e.name, e.is_dir, data.has_parent);
+    });
+  </script>
+</html>
